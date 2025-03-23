@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Telegram Bot Token Validator - Validate Your API Token</title>
+  <meta name="description" content="Easily validate your Telegram Bot API Token using our Token Validator. Ensure your token is correct and working with a simple tool.">
+  <meta name="keywords" content="Telegram, Bot, API Token, Token Validator, Validate Telegram Token">
+  <meta name="author" content="www.hemanthkumarmj.com">
+  <link rel="canonical" href="https://projects.hemanthkumarmj.com/telegramBotApiChecker.html">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Telegram Bot Token Validator",
+      "url": "https://projects.hemanthkumarmj.com/",
+      "author": {
+        "@type": "hemanthkumarmj",
+        "name": "https://www.hemanthkumarmj.com/"
+      },
+      "description": "A simple web app to validate Telegram Bot API Tokens.",
+      "applicationCategory": "Utility"
+    }
+  </script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f2f5;
+    }
+    .container {
+      background-color: #fff;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 500px;
+      text-align: center;
+    }
+    h2 {
+      color: #007bff;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    input:focus {
+      outline: none;
+      border-color: #007bff;
+      box-shadow: 0 0 4px rgba(0,123,255,0.25);
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+    button:hover:enabled {
+      background-color: #0056b3;
+    }
+    .result-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+    pre {
+      background-color: #f9f9f9;
+      padding: 1rem;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      max-height: 300px;
+      width: 90%;
+    }
+    .error {
+      color: red;
+    }
+    .small-btn {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 8px;
+      font-size: 12px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .small-btn:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+    .small-btn:hover:enabled {
+      background-color: #0056b3;
+    }
+    footer {
+      margin-top: 20px;
+      font-size: 12px;
+      color: #555;
+    }
+    footer a {
+      color: #007bff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    footer a::after {
+      content: '❤️';
+    }
+    footer a:hover {
+      color: #ff4081;
+    }
+    .key { color: #d73a49; }
+    .value { color: #22863a; }
+    .string { color: #032f62; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Telegram Bot Token Validator</h2>
+    <label for="apiToken">Enter your Telegram Bot API Token:</label>
+    <input type="text" id="apiToken" placeholder="Enter API Token (43-45 characters)" maxlength="46" oninput="validateInput()" />
+    <button id="validateBtn" onclick="validateToken()" disabled>Validate Token</button>
+    <button id="resetBtn" onclick="resetForm()" disabled>Reset</button>
+
+    <h3>Result:</h3>
+    <div class="result-container">
+      <pre id="result"></pre>
+      <button class="small-btn" id="copyBtn" onclick="copyToClipboard()" disabled>Copy</button>
+    </div>
+
+    <footer>Powered by <a href="https://www.hemanthkumarmj.com" target="_blank">www.hemanthkumarmj.com</a></footer>
+  </div>
+
+  <script>
+    function validateInput() {
+      const apiToken = document.getElementById('apiToken').value.trim();
+      const validateBtn = document.getElementById('validateBtn');
+      const resetBtn = document.getElementById('resetBtn');
+
+      const isValidLength = apiToken.length === 45;
+      validateBtn.disabled = isValidLength;
+      resetBtn.disabled = apiToken.length === 0;
+    }
+
+    function validateToken() {
+      let apiToken = document.getElementById('apiToken').value.trim();
+      const resultElement = document.getElementById('result');
+      resultElement.classList.remove('error');
+
+      const url = `https://api.telegram.org/bot${apiToken}/getMe`;
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          if (data.ok) {
+            resultElement.innerHTML = Object.entries(data.result)
+              .map(([key, value]) => `<span class='key'>${key}:</span> <span class='${typeof value === 'string' ? 'string' : 'value'}'>${value}</span>`)
+              .join('<br>');
+            document.getElementById('copyBtn').disabled = false;
+          } else {
+            resultElement.textContent = `Invalid Token: ${data.description}`;
+            resultElement.classList.add('error');
+          }
+        })
+        .catch(error => {
+          resultElement.textContent = `Error: ${error.message}`;
+          resultElement.classList.add('error');
+        });
+    }
+
+    function copyToClipboard() {
+      const resultElement = document.getElementById('result');
+      const textToCopy = resultElement.innerText;
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        alert('Result copied to clipboard!');
+      }).catch(err => {
+        alert('Failed to copy text: ' + err);
+      });
+    }
+
+    function resetForm() {
+      document.getElementById('apiToken').value = '';
+      document.getElementById('result').innerHTML = '';
+      document.getElementById('validateBtn').disabled = true;
+      document.getElementById('copyBtn').disabled = true;
+      document.getElementById('resetBtn').disabled = true;
+    }
+  </script>
+</body>
+</html>
