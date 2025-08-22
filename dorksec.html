@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>🔧 Information Gathering Via Internet</title>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Dorks Finder",
+  "url": "https://projects.hemanthkumarmj.com/",
+  "description": "A simple utility web app for generating and testing Google dorks.",
+  "applicationCategory": "Utility",
+  "operatingSystem": "All"
+}
+</script>
+ <style>
+:root {
+  --bg: #f9fafb;
+  --card: #ffffff;
+  --text: #111827;
+  --muted: #6b7280;
+  --brand: #24a553;
+  --brand-dark: #17532e; 
+  --border: #e5e7eb;
+  --radius: 12px;
+  --shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  font-size: 16px;
+}
+
+header {
+  background: #1f2937;
+  color: #fff;
+  padding: 1rem 1.25rem;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: var(--shadow);
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 1.5rem auto 2rem;
+  padding: 0 1rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.input-box {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 1rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  transition: box-shadow 0.2s ease;
+}
+
+.input-box:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+.input-box label {
+  font-weight: 600;
+  white-space: nowrap;
+  font-size: 0.95rem;
+}
+
+.group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  fill: var(--muted);
+}
+
+.input {
+  flex: 1;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 1rem;
+  min-width: 220px;
+  transition: border 0.2s ease;
+}
+
+.input:focus {
+  outline: none;
+  border: 1px solid var(--brand);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+.section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1rem 1.2rem;
+  box-shadow: var(--shadow);
+  transition: box-shadow 0.2s ease;
+}
+
+.section:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+.section h2 {
+  margin: 0 0 0.7rem;
+  font-size: 1.05rem;
+  border-left: 4px solid var(--brand);
+  padding-left: 0.5rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.recon-btn {
+  background: var(--brand);
+  color: #fff;
+  border: 0;
+  padding: 0.55rem 0.95rem;
+  border-radius: 9px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: transform 0.05s ease, background 0.15s ease, box-shadow 0.15s ease;
+  white-space: nowrap;
+}
+
+.recon-btn:hover {
+  background: var(--brand-dark);
+  box-shadow: var(--shadow-hover);
+}
+
+.recon-btn:active {
+  transform: scale(0.97);
+}
+
+.note {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 0.4rem;
+}
+
+.footer {
+  margin-top: 2rem;
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.footer a {
+  text-decoration: none;
+  color: var(--brand);
+  font-weight: 600;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+@media (min-width: 900px) {
+  .container {
+    grid-template-columns: 1fr 1fr;
+  }
+  .span-2 {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 600px) {
+  .button-group {
+    flex-direction: column;
+  }
+  .recon-btn {
+    width: 100%;
+  }
+}
+</style>
+</head>
+<body>
+  <header>
+    <h1>🔧 Sensitive Information Gathering Tool</h1>
+  </header>
+
+  <main class="container">
+
+    <section class="input-box span-2">
+      <label for="domain">Enter Target Domain:</label>
+      <div class="group">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M21.53 20.47l-3.66-3.66A8.96 8.96 0 0020 11c0-4.97-4.03-9-9-9S2 6.03 2 11s4.03 9 9 9a8.96 8.96 0 005.87-2.13l3.66 3.66c.15.15.34.22.53.22s.38-.07.53-.22c.3-.29.3-.77.03-1.06zM3.5 11c0-4.14 3.36-7.5 7.5-7.5S18.5 6.86 18.5 11 15.14 18.5 11 18.5 3.5 15.14 3.5 11z"/>
+        </svg>
+        <input id="domain" class="input" type="search" placeholder="example.com" />
+      </div>
+      <div class="note">Tip: Press <kbd>Enter</kbd> to run a quick <em>site:</em> search in Google.</div>
+    </section>
+
+    <!-- INFORMATION DISCLOSURE -->
+    <section class="section">
+      <h2>Information disclosure</h2>
+      <div class="button-group">
+        <button class="recon-btn" onclick="openRecon('https://www.google.com/search?q=site:')">Google Dork</button>
+        <button class="recon-btn" onclick="openRecon('https://www.google.com/search?q=inurl:admin|login+site:')">Admin Panel</button>
+        <button class="recon-btn" onclick="openRecon('https://www.google.com/search?q=ext:log+site:')">Exposed Logs</button>
+        <button class="recon-btn" onclick="openRecon('https://www.google.com/search?q=ext:pdf+site:')">PDFs</button>
+        <button class="recon-btn" onclick="openRecon('https://www.google.com/search?q=site:')">Sensitive Files (generic)</button>
+        <button class="recon-btn" onclick="openRecon('https://www.google.com/search?q=site:pastebin.com+intext:')">Pastebin</button>
+        <button class="recon-btn" onclick="openRecon('https://www.google.com/search?q=site:exploit-db.com+')">Exploit-DB</button>
+        <button class="recon-btn" onclick="openRecon('https://www.google.com/search?q=site:nvd.nist.gov+')">NVD (NIST)</button>
+      </div>
+    </section>
+
+    <!-- SUBDOMAIN FINDING -->
+    <section class="section">
+      <h2>Subdomain finding</h2>
+      <div class="button-group">
+        <button class="recon-btn" onclick="openRecon('https://www.google.com/search?q=site:*.')">1st level Subdomain</button>
+        <button class="recon-btn" onclick="openRecon('https://www.google.com/search?q=site:*.*.')">2nd level Subdomain</button>
+        <button class="recon-btn" onclick="openRecon('https://www.google.com/search?q=site:*.*.*.')">3rd level Subdomain</button>
+        <button class="recon-btn" onclick="openRecon('https://crt.sh/?q=')">crt.sh</button>
+        <button class="recon-btn" onclick="openRecon('https://securitytrails.com/domain/')">SecurityTrails</button>
+        <button class="recon-btn" onclick="openRecon('https://searchdns.netcraft.com/?host=')">Netcraft</button>
+        <button class="recon-btn" onclick="openRecon('https://viewdns.info/reversewhois/?q=')">ViewDNS (Reverse WHOIS)</button>
+        <button class="recon-btn" onclick="openRecon('https://dnschecker.org/all-dns-records-of-domain.php?query=')">DNSChecker</button>
+        <button class="recon-btn" onclick="openRecon('https://shodan.io/search?query=')">Shodan</button>
+        <button class="recon-btn" onclick="openRecon('https://hunter.io/search/')">Hunter.io</button>
+      </div>
+    </section>
+
+    <!-- PASSIVE RECON -->
+    <section class="section">
+      <h2>Passive reconnaissance</h2>
+      <div class="button-group">
+        <button class="recon-btn" onclick="whoisLookup()">WHOIS Lookup</button>
+        <button class="recon-btn" onclick="dnsInfo()">DNS Information</button>
+        <button class="recon-btn" onclick="checkSSL()">SSL Certificate Info</button>
+        <button class="recon-btn" onclick="asnLookup()">ASN Lookup</button>
+        <button class="recon-btn" onclick="robotsTxt()">Robots.txt</button>
+        <button class="recon-btn" onclick="reverseIP()">Reverse IP Lookup</button>
+      </div>
+    </section>
+
+    <!-- TECHNOLOGY DETECTOR -->
+    <section class="section">
+      <h2>Technology detector</h2>
+      <div class="button-group">
+        <button class="recon-btn" onclick="openRecon('https://builtwith.com/')">BuiltWith</button>
+        <button class="recon-btn" onclick="openRecon('https://who.is/whois/')">WHOis</button>
+        <button class="recon-btn" onclick="openRecon('https://w3techs.com/sites/info/')">w3techs</button>
+        <button class="recon-btn" onclick="openRecon('https://whatcms.org/?s=')">WhatCMS</button>
+      </div>
+    </section>
+
+    <!-- S3 BUCKET LISTING -->
+    <section class="section">
+      <h2>S3 Bucket Listing</h2>
+      <div class="button-group">
+        <button class="recon-btn" onclick="openGoogleDork('site:s3.amazonaws.com example.com')">AWS S3 Buckets</button>
+        <button class="recon-btn" onclick="openGoogleDork('site:storage.googleapis.com example.com')">Google Cloud Storage</button>
+        <button class="recon-btn" onclick="openGoogleDork('site:blob.core.windows.net example.com')">Azure Blob Storage</button>
+      </div>
+    </section>
+
+    <!-- CLOUD ASSETS -->
+    <section class="section">
+      <h2>Cloud Assets</h2>
+      <div class="button-group">
+        <button class="recon-btn" onclick="openGoogleDork('site:s3.amazonaws.com example.com')">AWS S3 Buckets</button>
+        <button class="recon-btn" onclick="openGoogleDork('site:storage.googleapis.com example.com')">Google Cloud Storage</button>
+        <button class="recon-btn" onclick="openGoogleDork('site:azurewebsites.net example.com')">Azure Websites</button>
+        <button class="recon-btn" onclick="openGoogleDork('site:example.com (inurl:amazonaws.com OR inurl:digitaloceanspaces.com OR inurl:blob.core.windows.net)')">Cloud Storage URLs</button>
+      </div>
+    </section>
+
+    <!-- SECRET FILES -->
+    <section class="section span-2">
+      <h2>Secret Files</h2>
+      <div class="button-group">
+        <button class="recon-btn" onclick="openUrlReplace('https://web.archive.org/cdx/search/cdx?url=*.example.com/*&collapse=urlkey&output=text&fl=original&filter=original:.*\\.(xls|xml|xlsx|json|pdf|sql|doc|docx|pptx|txt|git|zip|tar\\.gz|tgz|bak|7z|rar|log|cache|secret|db|backup|yml|gz|config|csv|yaml|md|md5|exe|dll|bin|ini|bat|sh|tar|deb|rpm|iso|img|env|apk|msi|dmg|tmp|crt|pem|key|pub|asc)$')">web.archive.org (Sensitive Files)</button>
+        <button class="recon-btn" onclick="openUrlReplace('https://web.archive.org/cdx/search/cdx?url=*.example.com/*&collapse=urlkey&output=text&fl=original')">web.archive.org (All)</button>
+        <button class="recon-btn" onclick="openUrlReplace('https://gist.github.com/search?q=example.com+apikey&type=gists')">GitHub Gists API Keys</button>
+        <button class="recon-btn" onclick="openUrlReplace('https://web.archive.org/cdx/search/cdx?url=*.example.com/*&collapse=urlkey&output=text&fl=original&filter=original:.*\\.env$')">.env Files</button>
+        <button class="recon-btn" onclick="openGoogleDork('site:example.com (authorization:Bearer OR authorization:Basic OR authorization:AWS) ext:log OR ext:txt OR ext:env')">Authorization Tokens</button>
+        <button class="recon-btn" onclick="openUrlReplace('https://www.shodan.io/search?query=Ssl.cert.subject.CN:%22example.com%22+200')">SSL Cert CN in Shodan</button>
+        <button class="recon-btn" onclick="openUrlReplace('https://web.archive.org/cdx/search/cdx?url=*.example.com/*&collapse=urlkey&output=text&fl=original&filter=original:.*\\.js$')">JS Files (Wayback)</button>
+      </div>
+    </section>
+
+    <!-- DIRECTORY TRAVERSAL / INDEXING -->
+    <section class="section">
+      <h2>Directory Traversal</h2>
+      <div class="button-group">
+        <button class="recon-btn" onclick="openGoogleDork('site:example.com intitle:index.of')">Directory Listing</button>
+        <button class="recon-btn" onclick="openGoogleDork('site:example.com filetype:log')">Log Files</button>
+        <button class="recon-btn" onclick="openGoogleDork('site:example.com filetype:conf OR filetype:config')">Config Files</button>
+      </div>
+    </section>
+
+    <!-- EMAIL / SPF -->
+    <section class="section">
+      <h2>SPF & Email Protection</h2>
+      <div class="button-group">
+        <button class="recon-btn" onclick="openRecon('https://mxtoolbox.com/SuperTool.aspx?run=toolpage&action=spf:')">MXToolbox SPF</button>
+        <button class="recon-btn" onclick="openRecon('https://www.kitterman.com/spf/getspf3.py?serial=fred12&domain=')">Kitterman SPF</button>
+      </div>
+    </section>
+
+    <!-- CLICKJACKING -->
+    <section class="section">
+      <h2>Clickjacking</h2>
+      <div class="button-group">
+        <button class="recon-btn" onclick="openRecon('https://clickjacker.io/test?url=')">clickjacker.io Test</button>
+      </div>
+    </section>
+
+    <!-- PORT SCANNING (WEB) -->
+    <section class="section">
+      <h2>Port scanning</h2>
+      <div class="button-group">
+        <button class="recon-btn" onclick="openRecon('https://viewdns.info/portscan/?host=')">ViewDNS Portscan</button>
+        <button class="recon-btn" onclick="openRecon('https://web-check.xyz/?host=')">web-check</button>
+      </div>
+    </section>
+
+    <!-- URLS COLLECTING -->
+    <section class="section">
+      <h2>URLs collecting</h2>
+      <div class="button-group">
+        <button class="recon-btn" onclick="openRecon('https://web.archive.org/web/*/')">Wayback</button>
+        <button class="recon-btn" onclick="openRecon('https://urlscan.io/domain/')">urlscan</button>
+        <button class="recon-btn" onclick="openRecon('https://otx.alienvault.com/indicator/domain/')">AlienVault OTX</button>
+      </div>
+    </section>
+
+    <!-- API DISCOVERY -->
+    <section class="section span-2">
+      <h2>API</h2>
+      <div class="button-group">
+        <button class="recon-btn" onclick="openGoogleDork('site:example.com (inurl:api OR inurl:apis OR inurl:graphql OR inurl:swagger OR inurl:v1 OR inurl:v2 OR inurl:v3) (filetype:json OR filetype:yaml OR filetype:xml)')">API Documentation</button>
+        <button class="recon-btn" onclick="openGoogleDork('site:example.com inurl:(swagger-ui OR swagger.json OR api-docs OR openapi.json)')">Swagger/OpenAPI</button>
+        <button class="recon-btn" onclick="openGoogleDork('site:example.com inurl:(graphql OR graphiql OR hasura)')">GraphQL Endpoints</button>
+        <button class="recon-btn" onclick="openGoogleDork('site:example.com inurl:(.git OR .svn OR .hg OR .bzr)')">Version Control</button>
+        <button class="recon-btn" onclick="openGoogleDork('site:example.com inurl:(jenkins OR gitlab OR bitbucket OR jira OR confluence)')">Dev Tools</button>
+        <button class="recon-btn" onclick="openGoogleDork('site:example.com ext:(php OR py OR rb OR java OR js OR ts OR go OR sh OR pl OR asp OR aspx) inurl:(test OR dev OR staging)')">Developer Scripts</button>
+      </div>
+    </section>
+
+    <!-- CODE & DOCS -->
+    <section class="section">
+      <h2>Code & documentation search</h2>
+      <div class="button-group">
+        <button class="recon-btn" onclick="openGoogleDork('site:example.com ext:(doc OR docx OR odt OR pdf OR rtf OR sxw OR psw OR ppt OR pptx OR pps OR csv)')">Documents</button>
+        <button class="recon-btn" onclick="openGoogleDork('site:(github.com OR gitlab.com) example.com')">GitHub/GitLab Code</button>
+      </div>
+    </section>
+  </main>
+  <div class="footer">
+    Powered by <a href="https://www.hemanthkumarmj.com" target="_blank">www.hemanthkumarmj.com</a> ❤️
+  </div>
+  <script>
+    
+    const domainInput = document.getElementById('domain');
+    const domainPattern = /^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/;
+
+    function getDomain(){
+      const domain = (domainInput.value || '').trim();
+      if(!domainPattern.test(domain)){
+        alert('Please enter a valid domain (e.g., example.com).');
+        return null;
+      }
+      return domain;
+    }
+
+    // Appends the validated domain to a base URL (path or query tail).
+    function openRecon(baseUrl){
+      const d = getDomain(); if(!d) return;
+      // If base ends with '=' we should encode the domain for query usage
+      const needsEncode = baseUrl.endsWith('=') || baseUrl.includes('?');
+      const url = baseUrl + (needsEncode ? encodeURIComponent(d) : d);
+      window.open(url, '_blank');
+    }
+
+    // For Google dork strings that contain the placeholder 'example.com'
+    function openGoogleDork(queryTemplate){
+      const d = getDomain(); if(!d) return;
+      const q = queryTemplate.replaceAll('example.com', d);
+      const url = 'https://www.google.com/search?q=' + encodeURIComponent(q);
+      window.open(url, '_blank');
+    }
+
+    // For direct URLs that already have full query text and need 'example.com' replaced
+    function openUrlReplace(urlTemplate){
+      const d = getDomain(); if(!d) return;
+      const url = urlTemplate.replaceAll('example.com', d);
+      window.open(url, '_blank');
+    }
+
+    // ---- Specific Actions (that use the helpers) ----
+    function whoisLookup(){
+      const d = getDomain(); if(!d) return;
+      window.open(`https://whois.domaintools.com/${encodeURIComponent(d)}`, '_blank');
+    }
+    function dnsInfo(){
+      const d = getDomain(); if(!d) return;
+      window.open(`https://dnsdumpster.com/?q=${encodeURIComponent(d)}`, '_blank');
+    }
+    function checkSSL(){
+      const d = getDomain(); if(!d) return;
+      window.open(`https://www.ssllabs.com/ssltest/analyze.html?d=${encodeURIComponent(d)}`, '_blank');
+    }
+    function reverseIP(){
+      const d = getDomain(); if(!d) return;
+      window.open(`https://viewdns.info/reverseip/?host=${encodeURIComponent(d)}&t=1`, '_blank');
+    }
+    function asnLookup(){
+      const d = getDomain(); if(!d) return;
+      window.open(`https://bgp.he.net/search?search%5Bsearch%5D=${encodeURIComponent(d)}&commit=Search`, '_blank');
+    }
+    function robotsTxt(){
+      const d = getDomain(); if(!d) return;
+      window.open(`https://${d}/robots.txt`, '_blank');
+    }
+
+    // Quick action on Enter: Google "site:<domain>"
+    domainInput.addEventListener('keydown', e=>{
+      if(e.key === 'Enter'){
+        const d = getDomain(); if(!d) return;
+        window.open('https://www.google.com/search?q=' + encodeURIComponent('site:' + d), '_blank');
+      }
+    });
+  </script>
+</body>
+</html>
