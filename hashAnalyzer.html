@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hash Analyzer</title>
+    <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Hash Analyzer",
+    "url": "https://projects.hemanthkumarmj.com/hash-analyzer",
+    "author": {
+      "@type": "Person",
+      "name": "Hemanth Kumar M J",
+      "url": "https://www.hemanthkumarmj.com/"
+    },
+    "description": "A lightweight web tool to analyze and identify hash types (MD5, SHA-1, SHA-256, NTLM, bcrypt, etc.).",
+    "applicationCategory": "Utility",
+    "operatingSystem": "Any",
+    "browserRequirements": "Requires JavaScript enabled"
+  }
+  </script>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: #f3f4f6;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+
+    .container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 420px;
+      max-width: 90%;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      color: #222;
+    }
+
+    p {
+      color: #555;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 90%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    button {
+      padding: 12px 25px;
+      background: #028a0f;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: #026b0c;
+    }
+
+    .results {
+      margin-top: 20px;
+      text-align: left;
+      background: #f9fafb;
+      padding: 15px;
+      border-radius: 10px;
+      font-size: 14px;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+
+    .results p strong {
+      color: #111;
+    }
+
+    .footer {
+      margin-top: 20px;
+      font-size: 13px;
+      color: #444;
+    }
+
+    .footer a {
+      text-decoration: none;
+      color: #0073e6;
+      font-weight: bold;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Hash Analyzer</h1>
+    <p>Tool to identify hash types. Enter a hash to be identified.</p>
+
+    <input type="text" id="hashInput" placeholder="Enter hash here">
+    <br>
+    <button onclick="analyzeHash()">Analyze</button>
+
+    <div id="results" class="results"></div>
+    <button id="copyBtn" style="display:none; margin-top:8px; background:#0073e6">Copy Hash</button>
+    <button id="clearBtn" style="display:none; margin-top:8px; background:#dc3545">Clear</button>
+  </div>
+
+  <div class="footer">
+    Powered by <a href="https://www.hemanthkumarmj.com" target="_blank">www.hemanthkumarmj.com</a> ❤️
+  </div>
+
+<script>
+  // Function to escape HTML special characters
+  function escapeHTML(str) {
+    return str.replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#039;");
+  }
+
+  function analyzeHash() {
+    const hashInput = document.getElementById("hashInput").value.trim();
+    const hash = escapeHTML(hashInput);
+    let result = "";
+
+    const copyBtn = document.getElementById("copyBtn");
+    const clearBtn = document.getElementById("clearBtn");
+
+    if (!hashInput) {
+      result = "<p style='color:red'>⚠️ Please enter a hash!</p>";
+      copyBtn.style.display = "none";
+      clearBtn.style.display = "none";
+    } else {
+      const length = hashInput.length;
+      const isHex = /^[a-f0-9]+$/i.test(hashInput);
+      let type = [];
+
+      if (isHex) {
+        switch (length) {
+          case 16: type = ["LM Hash", "MySQL (old)"]; break;
+          case 32: type = ["MD5", "MD4", "NTLM"]; break;
+          case 40: type = ["SHA-1"]; break;
+          case 48: type = ["MySQL 5.x"]; break;
+          case 56: type = ["SHA-224"]; break;
+          case 64: type = ["SHA-256"]; break;
+          case 96: type = ["SHA-384"]; break;
+          case 128: type = ["SHA-512", "Whirlpool"]; break;
+          case 160: type = ["SHA-3 (512)"]; break;
+          case 256: type = ["SHA-3 (1024)"]; break;
+          default: type = ["Unknown (maybe salted/custom)"];
+        }
+      } else {
+        // Detect common non-hex formats
+        if (hashInput.startsWith("$2a$") || hashInput.startsWith("$2b$") || hashInput.startsWith("$2y$")) {
+          type = ["bcrypt"];
+        } else if (hashInput.startsWith("$1$")) {
+          type = ["MD5 Crypt"];
+        } else if (hashInput.startsWith("$5$")) {
+          type = ["SHA-256 Crypt"];
+        } else if (hashInput.startsWith("$6$")) {
+          type = ["SHA-512 Crypt"];
+        } else {
+          type = ["Not a valid hex hash"];
+        }
+      }
+
+      result = `
+        <p><strong>Hash:</strong> ${hash}</p>
+        <p><strong>Possible Type(s):</strong> ${type.join(", ")}</p>
+        <p><strong>Bit length:</strong> ${length * 4}</p>
+        <p><strong>Character length:</strong> ${length}</p>
+        <p><strong>Character type:</strong> ${isHex ? "Hexadecimal" : "Other"}</p>
+      `;
+
+      copyBtn.style.display = "inline-block";
+      clearBtn.style.display = "inline-block";
+    }
+
+    document.getElementById("results").innerHTML = result;
+  }
+
+  // Trigger button click on Enter key
+  document.getElementById("hashInput").addEventListener("keyup", function(event) {
+    if (event.key === "Enter") {
+      analyzeHash();
+    }
+  });
+
+  // Copy hash
+  document.getElementById("copyBtn").addEventListener("click", function() {
+    const text = document.getElementById("hashInput").value.trim();
+    navigator.clipboard.writeText(text);
+    alert("✅ Hash copied to clipboard!");
+  });
+
+  // Clear input
+  document.getElementById("clearBtn").addEventListener("click", function() {
+    document.getElementById("hashInput").value = "";
+    document.getElementById("results").innerHTML = "";
+    document.getElementById("copyBtn").style.display = "none";
+    document.getElementById("clearBtn").style.display = "none";
+  });
+</script>
+</body>
+</html>
