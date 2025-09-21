@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unicode Spoof Generator | Homoglyph Attack Generator</title>
+
+<!-- Google Noto Sans for ALmost Unicode support -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
+
+<style>
+  body {
+    font-family: 'Noto Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #0d1117;
+    color: #c9d1d9;
+    margin: 0;
+    padding: 20px;
+  }
+
+  h1 {
+    text-align: center;
+    color: #58a6ff;
+    margin-bottom: 20px;
+  }
+
+  form {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: #161b22;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px #00000099;
+  }
+
+  label {
+    display: block;
+    margin: 15px 0 5px;
+    font-weight: bold;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #30363d;
+    background: #0d1117;
+    color: #c9d1d9;
+    font-size: 16px;
+  }
+
+  .in {
+    padding: 10px 20px;
+    background: #238636;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+    transition: background 0.3s ease;
+    margin-top: 15px;
+  }
+
+  .in:hover { background: #2ea043; }
+  .in:active { background: #19692c; }
+
+  #choices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #30363d;
+    padding: 10px;
+    border-radius: 8px;
+    background: #0d1117;
+  }
+
+  .letter-container {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 5px;
+    min-width: 60px;
+    max-width: 80px;
+    background: #161b22;
+  }
+
+  .letter-container input[type="radio"] { margin-right: 2px; }
+
+  .output-box {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    padding: 15px;
+    border-radius: 12px;
+    word-break: break-all;
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .output-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .btn-link {
+    display: inline-block;
+    background-color: #238636;
+    color: white;
+    text-decoration: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-weight: bold;
+    transition: background 0.3s;
+  }
+
+  .btn-link:hover { background-color: #2ea043; }
+
+  .copy-field {
+    background: #161b22;
+    color: #c9d1d9;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 8px;
+    font-size: 16px;
+    flex: 1;
+  }
+
+  .copy-btn {
+    background: #238636;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s;
+  }
+
+  .copy-btn:hover { background: #2ea043; }
+
+   .footer {
+      text-align: center;
+      justify-content: center;
+      margin-top: 20px;
+      font-size: 13px;
+      color: #444;
+    }
+
+    .footer a {
+      text-decoration: none;
+      color: #0073e6;
+      font-weight: bold;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+  sup { font-size: smaller; color: #8b949e; }
+
+  @media(max-width: 768px) {
+    #choices { max-height: 300px; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Unicode Spoof Generator</h1>
+
+<form name="HomoForm" onsubmit="return false;">
+  <label><b>1st:</b> Type in a domain name:</label>
+  <input type="text" id="domainInput" name="hname" oninput="genForm()">
+  
+  <label><b>2nd:</b> Choose homoglyphs to use:</label>
+  <div id="choices"></div>
+
+  <label><b>Generated Homoglyph Domain:</b></label>
+  <div class="output-box">
+    <div class="output-item">
+    <h5>Link:</h5>
+      <a id="testLink" href="#" target="_blank" class="btn-link">Test Link</a>
+      <button type="button" class="copy-btn" onclick="copyToClipboard('testLink')">📋</button>
+    </div>
+
+    <div class="output-item">
+    <h5>Output:</h5>
+      <input type="text" id="copyField" readonly class="copy-field">
+      <button type="button" class="copy-btn" onclick="copyToClipboard('copyField')">📋</button>
+    </div>
+  </div>
+
+  <input type="hidden" name="uhname">
+  <button type="button" class="in" onclick="clearBtn()">Clear</button>
+</form>
+  <div class="footer">
+    Powered by <a href="https://www.hemanthkumarmj.com" target="_blank">www.hemanthkumarmj.com</a> ❤️
+  </div>
+<script>
+// Homoglyphs per letter
+const Homos = {
+  // Letters
+  a: 'aÀÁÂÃÄÅɑAàáâãäåΑαаᎪＡａ',
+  b: 'bBΒβßʙВЬᏴᛒＢｂ',
+  c: 'cCСсϲϹᏟⅭⅽＣｃ𐒨',
+  d: 'dDĐđĎďԁժᎠḍⅮⅾＤｄ',
+  e: 'eEÈÉÊËéêëĒēĔĕĖėĘĚěΕЕеᎬＥｅ',
+  f: 'fFϜＦｆ',
+  g: 'gGɡɢԌնᏀＧｇ',
+  h: 'hHΗНʜһᎻＨｈ',
+  i: 'iIilΙІіاᎥ𐒃ⅠⅰᛁＩｉɩ',
+  j: 'jJϳЈјյᎫＪｊ',
+  k: 'kKΚκКᏦᛕKＫｋ',
+  l: 'lLʟιاᏞⅬⅼＬｌ',
+  m: 'mMΜϺМᎷᛖⅯⅿＭｍ',
+  n: 'nNɴΝＮｎ',
+  o: 'oO0ΟοОօ𐒆Ｏｏ',
+  p: 'pPΡρРрᏢＰｐ',
+  q: 'qQႭႳＱｑ',
+  r: 'rRʀԻᏒᚱＲｒ',
+  s: 'sSЅѕՏႽᏚＳｓ𐒖',
+  t: 'tTΤτТᎢＴｔ',
+  u: 'uUμυԱՍ⋃Ｕｕ',
+  v: 'vVνѴѵᏙⅤⅴＶｖ',
+  w: 'wWѡᎳＷｗ',
+  x: 'xXΧχХхⅩⅹＸｘ',
+  y: 'yYʏΥγуҮＹｙ',
+  z: 'zZΖᏃＺｚ',
+
+  // Digits
+  '0': '0OoΟοОօ𐒆Ｏｏ',
+  '1': '1Iا１',
+  '2': '2２',
+  '3': '3３',
+  '4': '4４',
+  '5': '5５',
+  '6': '6６',
+  '7': '7𐒇７',
+  '8': '8Ց８',
+  '9': '9９',
+
+  // Whitespace
+  ' ': ' ᅟᅠ         　ㅤ',
+
+  // Symbols
+  '!': '!ǃ！',
+  '"': '"״″＂',
+  '$': '$＄',
+  '%': '%％',
+  '&': '&＆',
+  "'": "'＇",
+  '(': '(﹝（',
+  ')': ')﹞）',
+  '*': '*⁎＊',
+  '+': '+＋',
+  ',': ',‚，',
+  '-': '-‐𐆑－',
+  '.': '.٠۔܁܂․‧。．｡',
+  '/': '/̸⁄∕╱⫻⫽／ﾉ',
+  ':': ':։܃܄∶꞉：',
+  ';': ';;；',
+  '<': '<‹＜',
+  '=': '=',
+  '>': '>›＞',
+  '?': '?？',
+  '@': '@＠',
+  '[': '[［',
+  '\\': '\\＼',
+  ']': ']］',
+  '^': '^＾',
+  '_': '_＿',
+  '`': '`｀'
+};
+
+// Copy function
+function copyToClipboard(id) {
+  const el = document.getElementById(id);
+  const textToCopy = el.value !== undefined ? el.value : el.href;
+  navigator.clipboard.writeText(textToCopy)
+    .then(() => alert('Copied to clipboard!'))
+    .catch(() => alert('Failed to copy!'));
+}
+
+// Generate form dynamically
+function genForm() {
+  const HostName = document.getElementById("domainInput").value.toLowerCase();
+  const container = document.getElementById("choices");
+  container.innerHTML = '';
+
+  for (let i = 0; i < HostName.length; i++) {
+    const letter = HostName[i];
+    if (!Homos[letter]) continue;
+
+    const letterDiv = document.createElement('div');
+    letterDiv.className = 'letter-container';
+
+    for (const char of Homos[letter]) {
+      const span = document.createElement('span');
+      const radio = document.createElement('input');
+      radio.type = 'radio';
+      radio.name = 'lc' + i;
+      radio.value = char;
+      radio.checked = Homos[letter][0] === char;
+      radio.onclick = UpdateOutput;
+
+      const charSup = document.createElement('sup');
+      charSup.textContent = char.codePointAt(0).toString(16);
+
+      span.appendChild(radio);
+      span.appendChild(document.createTextNode(char));
+      span.appendChild(charSup);
+      span.appendChild(document.createElement('br'));
+      letterDiv.appendChild(span);
+    }
+
+    container.appendChild(letterDiv);
+  }
+
+  UpdateOutput();
+}
+
+// Update output without breaking buttons
+function UpdateOutput() {
+  const HostName = document.getElementById("domainInput").value.toLowerCase();
+  let HostString = '';
+  for (let i = 0; i < HostName.length; i++) {
+    const val = getCheckedValue(document.forms["HomoForm"]['lc'+i]);
+    HostString += val || HostName[i];
+  }
+
+  document.forms["HomoForm"]["uhname"].value = HostString;
+  document.getElementById("testLink").href = "http://" + HostString;
+  document.getElementById("testLink").textContent = HostString;
+  document.getElementById("copyField").value = HostString;
+}
+
+// Get checked radio value
+function getCheckedValue(radioObj) {
+  if (!radioObj) return "";
+  if (radioObj.length === undefined) return radioObj.checked ? radioObj.value : "";
+  for (let r of radioObj) if (r.checked) return r.value;
+  return "";
+}
+
+// Clear form
+function clearBtn() {
+  document.getElementById("domainInput").value = "";
+  document.getElementById("choices").innerHTML = "";
+  document.getElementById("testLink").textContent = "Test Link";
+  document.getElementById("testLink").href = "#";
+  document.getElementById("copyField").value = "";
+}
+</script>
+</body>
+</html>
