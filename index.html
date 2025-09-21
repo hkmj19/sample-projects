@@ -26,13 +26,23 @@
       text-shadow: 0 0 10px rgba(0, 255, 153, 0.6);
     }
 
-    .projects {
+    section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    section h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      color: #00ff99;
+      text-align: center;
+    }
+
+    .projects, .repos {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 1.5rem;
-      padding: 2rem;
-      max-width: 1100px;
-      margin: 0 auto;
     }
 
     .card {
@@ -50,7 +60,7 @@
       border-color: #00ff99;
     }
 
-    .card h2 {
+    .card h3 {
       margin-top: 0;
       font-size: 1.2rem;
       color: #00ff99;
@@ -88,37 +98,56 @@
 </head>
 <body>
   <header>
-    <h1>My Security & Utility Projects</h1>
+    <h1>Security & Utility Projects</h1>
   </header>
 
-  <section class="projects">
-    <div class="card">
-      <h2>Telegram Bot Token Validator</h2>
-      <p>Validate and verify your Telegram bot API tokens securely.</p>
-      <a href="https://projects.hemanthkumarmj.com/telegramBotApiChecker.html" target="_blank">Open Tool</a>
-    </div>
+  <!-- First Section: Live Tools -->
+  <section>
+    <h2>🔧 Online Tools</h2>
+    <div class="projects">
+      <div class="card">
+        <h3>Telegram Bot Token Validator</h3>
+        <p>Validate and verify your Telegram bot API tokens securely.</p>
+        <a href="https://projects.hemanthkumarmj.com/telegramBotApiChecker.html" target="_blank">Open Tool</a>
+      </div>
 
-    <div class="card">
-      <h2>Hash Analyzer</h2>
-      <p>Identify and analyze different hash formats quickly.</p>
-      <a href="https://projects.hemanthkumarmj.com/hashAnalyzer.html" target="_blank">Open Tool</a>
-    </div>
+      <div class="card">
+        <h3>Hash Analyzer</h3>
+        <p>Identify and analyze different hash formats quickly.</p>
+        <a href="https://projects.hemanthkumarmj.com/hashAnalyzer.html" target="_blank">Open Tool</a>
+      </div>
 
-    <div class="card">
-      <h2>Sensitive Info Gathering</h2>
-      <p>DorkSec tool to gather sensitive information using dorks.</p>
-      <a href="https://projects.hemanthkumarmj.com/dorksec.html" target="_blank">Open Tool</a>
-    </div>
+      <div class="card">
+        <h3>Sensitive Info Gathering</h3>
+        <p>DorkSec tool to gather sensitive information using dorks.</p>
+        <a href="https://projects.hemanthkumarmj.com/dorksec.html" target="_blank">Open Tool</a>
+      </div>
 
-    <div class="card">
-      <h2>IPv4 Subnet Calculator</h2>
-      <p>Calculate subnets easily with CIDR or subnet mask formats.</p>
-      <a href="https://projects.hemanthkumarmj.com/ipv4SubnetCalculator.html" target="_blank">Open Tool</a>
+      <div class="card">
+        <h3>IPv4 Subnet Calculator</h3>
+        <p>Calculate subnets easily with CIDR or subnet mask formats.</p>
+        <a href="https://projects.hemanthkumarmj.com/ipv4SubnetCalculator.html" target="_blank">Open Tool</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Second Section: GitHub Repos -->
+  <section>
+    <h2>📂 GitHub Repositories</h2>
+    <div class="repos">
+      <div class="card">
+        <h3>CSRF PoC Generator</h3>
+        <p>
+          CSRF Proof-of-Concept Generator using a TCP Server-Client model.  
+          The VBA client provides a UI for request parameters, while the Python server generates payloads dynamically.
+        </p>
+        <a href="https://github.com/hkmj19/CSRF-GENERATOR-USING-TCP-PROGRAMMING" target="_blank">View on GitHub</a>
+      </div>
     </div>
   </section>
 
   <footer>
-    © 2025 Hemanth Kumar MJ · All rights reserved
+    © 2025 Security & Utility Showcase · All rights reserved
   </footer>
 </body>
 </html>
